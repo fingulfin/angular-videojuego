@@ -1,0 +1,126 @@
+<div class="p-6">
+  <h2 class="mb-4 text-2xl font-bold">Administración de maestros</h2>
+
+  <mat-tab-group>
+    <mat-tab label="Maestros">
+      <div class="p-4">Contenido de maestros</div>
+    </mat-tab>
+    <mat-tab label="Cursos">
+      <div class="p-4">Contenido de cursos</div>
+    </mat-tab>
+    <mat-tab label="Usuarios">
+      <div class="p-4">Contenido de usuarios</div>
+    </mat-tab>
+
+    <mat-tab label="Guardar">
+      <form class="flex max-w-md flex-col gap-4 p-4" (submit)="guardar($event)">
+        <mat-form-field class="w-full">
+          <mat-label>Correo</mat-label>
+          <input id="correo" matInput type="email" [formField]="maestroForm.correo" />
+          <mat-error>
+            @if (maestroForm.correo().touched() && maestroForm.correo().invalid()) {
+              @for (error of maestroForm.correo().errors(); track error) {
+                {{ error.message }}
+              }
+            }
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+          <mat-label>Contraseña</mat-label>
+          <input
+            id="password"
+            matInput
+            type="password"
+            [formField]="maestroForm.password"
+          />
+          <mat-error>
+            @if (
+              maestroForm.password().touched() && maestroForm.password().invalid()
+            ) {
+              @for (error of maestroForm.password().errors(); track error) {
+                {{ error.message }}
+              }
+            }
+          </mat-error>
+        </mat-form-field>
+
+        <div class="flex flex-col gap-2">
+          <div
+            class="text-sm font-medium text-neutral-600 dark:text-neutral-300"
+          >
+            Enemigos
+          </div>
+
+          @for (enemigo of enemigos(); track $index) {
+            <div class="flex items-start gap-2">
+              <mat-form-field class="flex-1">
+                <mat-label>Nombre</mat-label>
+                <input
+                  matInput
+                  [value]="enemigo.nombre"
+                  (input)="onEnemigoInput($index, 'nombre', $any($event.target).value)"
+                />
+              </mat-form-field>
+              <mat-form-field class="flex-1">
+                <mat-label>Agresividad</mat-label>
+                <mat-select
+                  [value]="enemigo.agresividad"
+                  (selectionChange)="
+                    onEnemigoInput($index, 'agresividad', $event.value)
+                  "
+                >
+                  <mat-option value="alta">Alta</mat-option>
+                  <mat-option value="media">Media</mat-option>
+                  <mat-option value="baja">Baja</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <button
+                type="button"
+                matButton="outlined"
+                class="shrink-0"
+                (click)="eliminarEnemigo($index)"
+              >
+                Eliminar
+              </button>
+            </div>
+          }
+
+          <button
+            type="button"
+            matButton="outlined"
+            class="self-start"
+            (click)="agregarEnemigo()"
+          >
+            Agregar enemigo
+          </button>
+        </div>
+
+        @if (guardarError()) {
+          <div
+            class="rounded-lg bg-red-100 p-3 text-red-700 dark:bg-red-900/30 dark:text-red-300"
+          >
+            {{ guardarError() }}
+          </div>
+        }
+
+        @if (guardarExito()) {
+          <div
+            class="rounded-lg bg-green-100 p-3 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+          >
+            Maestro guardado correctamente
+          </div>
+        }
+
+        <button
+          type="submit"
+          matButton="filled"
+          class="w-full"
+          [disabled]="maestroForm().invalid()"
+        >
+          Guardar
+        </button>
+      </form>
+    </mat-tab>
+  </mat-tab-group>
+</div>

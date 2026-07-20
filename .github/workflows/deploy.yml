@@ -1,0 +1,50 @@
+# IMPORTANT: replace "angular-videojuego" in the --base-href below with your actual GitHub repository name
+# if it differs. The site will be served at https://<user>.github.io/<repo>/
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build (static, no SSR)
+        run: npx ng build --configuration production --base-href "/angular-videojuego/" --ssr=false --output-path=dist
+
+      - name: SPA fallback for deep links
+        run: cp dist/browser/index.html dist/browser/404.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/browser
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

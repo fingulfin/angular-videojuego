@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabGroup, MatTab } from '@angular/material/tabs';
+import { environment } from '@/environments/environment';
 
 @Component({
   selector: 'maestros-layout',
@@ -70,7 +71,7 @@ export default class MaestrosLayout {
       };
 
       this.http
-        .post('http://localhost:3000/api/mongo/maestros', body)
+        .post(`${environment.apiUrl}/api/mongo/maestros`, body)
         .subscribe({
           next: () => {
             this.guardarExito.set(true);

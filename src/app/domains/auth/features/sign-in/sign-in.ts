@@ -8,11 +8,12 @@ import {
 } from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatDivider } from '@angular/material/divider';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Router, RouterLink } from '@angular/router';
+import { environment } from '@/environments/environment';
 
 @Component({
   selector: 'auth-sign-in',
@@ -25,7 +26,7 @@ import { Router, RouterLink } from '@angular/router';
     MatIconModule,
     MatCheckboxModule,
     FormField,
-    MatDivider,
+      MatDividerModule,
   ],
 })
 export default class AuthSignIn {
@@ -57,7 +58,7 @@ export default class AuthSignIn {
         password: this.signInFormModel().password,
       };
 
-      this.http.post('http://localhost:3000/api/mongo/maestros/login', body).subscribe({
+      this.http.post(`${environment.apiUrl}/api/mongo/maestros/login`, body).subscribe({
 next: () => {
             this.router.navigateByUrl('/admin/maestros');
           },

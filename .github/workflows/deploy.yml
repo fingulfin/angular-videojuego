@@ -29,11 +29,13 @@ jobs:
 
       - run: npm ci
 
-      - name: Build (static, no SSR)
-        run: npx ng build --configuration production --base-href "/angular-videojuego/" --ssr=false --output-path=dist
+      - name: Build (production)
+        run: npx ng build --configuration production --base-href "/angular-videojuego/" --output-path=dist
 
-      - name: SPA fallback for deep links
-        run: cp dist/browser/index.html dist/browser/404.html
+      - name: Prepare SPA artifact
+        run: |
+          mv dist/browser/index.csr.html dist/browser/index.html
+          cp dist/browser/index.html dist/browser/404.html
 
       - uses: actions/upload-pages-artifact@v3
         with:
